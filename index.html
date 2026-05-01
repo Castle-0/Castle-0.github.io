@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			.button{
+				padding:10px 20px;
+				font-size:15px;
+				cursor:pointer;
+				background:#4CAF50;
+				color:white;
+				border:none;
+				border-radius:5px;
+				position:absolute;
+				user-select:none;
+			}
+			.button:hover{
+				background:blue;
+			}
+			.show{
+				padding:10px 20px;
+				font-size:15px;
+				background:blue;
+				color:white;
+				border:none;
+				border-radius:5px;
+			}
+			.GOVE{
+				width:10000px;
+				height:10000px;
+				background:blue;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="button" id="btn" onclick="GO()">
+			push me
+		</div>
+		<div class="show" id="showLevel">
+			level:
+		</div>
+		<div class="button" id="newGames" onclick="newGame()">
+			NewGame
+		</div>
+		<div class="GOVE" id="Over" >
+			GameOverGameOverGameOverGameOverGameOverGameOverGameOverGameOverGameOverGameOver
+		</div>
+		<script>
+			let level=1;
+			let btn=document.getElementById("btn");
+			let showlevel=document.getElementById("showLevel");
+			let NG=document.getElementById("newGames");
+			let GOV=document.getElementById("Over");
+			GOV.style.display="none";
+			let running=false;
+			let wd=window.innerWidth;
+			let btnwd=btn.offsetWidth;
+			let ht=window.innerHeight-100;
+			let btnht=btn.offsetHeight;
+			let dx=(Math.random()-0.5)*2;
+			let dy=(Math.random()-0.5)*2;
+			let lef=0;
+			let bot=0;
+			let mouses=0;
+			showlevel.textContent="level:"+level;
+			function newGame(){
+				running=false;
+				level=1;
+				showlevel.textContent="level:"+level;
+				dx=(Math.random()-0.5)*2;
+				dy=(Math.random()-0.5)*2;
+				btnTCT();
+				mouses=0;
+				GOV.style.display="none";
+				btn.style.display="block";
+				showlevel.style.display="block";
+			}
+			function gotodct(){
+				lef=lef+dx;
+				bot=bot+dy;
+				if(lef<0){
+					dx=-dx;
+				}
+				if(lef+btnwd>wd){
+					dx=-dx;
+				}
+				if(bot+btnht>ht){
+					dy=-dy;
+				}
+				if(bot<0){
+					dy=-dy;
+				}
+				btn.style.left=lef+"px";
+				btn.style.bottom=bot+"px";
+			}
+			let tm=null;
+			function RUN(){
+				if(running){
+					gotodct();
+					tm=setTimeout(RUN,50);
+				}
+			}
+			function STOP(){
+				if(tm){
+					clearTimeout(tm);
+					tm=null;
+				}
+				btnTCT();
+			}
+			function btnTCT(){
+				running=false;
+				btn.textContent="push me";
+				btn.style.left=(wd/2-btnwd/2)+"px";
+				lef=(wd/2-btnwd/2);
+				btn.style.top="auto";
+				btn.style.bottom=(ht/2+100)+"px";
+				bot=(ht/2+100);
+			}
+			function swcdctdx(){
+				if(Math.random()<0.5){
+					dx=dx*(1+Math.random()/2);
+				}
+				else{
+					dx=(-1)*dx*(1+Math.random()/2);
+				}
+			}
+			function swcdctdy(){
+				if(Math.random()<0.5){
+					dy=dy*(1+Math.random()/2);
+				}
+				else{
+					dy=(-1)*dy*(1+Math.random()/2);
+				}
+			}
+			function swcdct(){
+				swcdctdx();
+				swcdctdy();
+			}
+			function gorand(){
+				let Rx=Math.random()*(wd-btnwd-20)+10;
+				let Ry=Math.random()*(ht-btnht-20)+10;
+				btn.style.left=Rx+"px";
+				btn.style.bottom=Ry+"px";
+				lef=Rx;
+				bot=Ry;
+			}
+			function GO(){
+				if(running){
+					STOP();
+					dx=dx/level;
+					dy=dy/level;
+					level=level+1;
+					swcdct();
+					dx=dx*level;
+					dy=dy*level;
+					showlevel.textContent="level:"+level;
+					mouses=0;
+				}
+				else{
+					btn.textContent="Don't push me";
+					running=true;
+					gorand();
+					mouses=mouses-1;
+					RUN();
+				}
+			}
+			btnTCT();
+			window.addEventListener('resize',function(){
+				wd=window.innerWidth;
+				btnwd=btn.offsetWidth;
+				ht=window.innerHeight;
+				btnht=btn.offsetHeight;
+				if(!running){
+					btnTCT();
+				}
+			});
+			function haha(){
+				btn.style.display="none";
+				showlevel.style.display="none";
+				GOV.style.display="block";
+			}
+			window.addEventListener('mousedown',function(event){
+				mouses=mouses+1;
+				if(mouses>2*level*level){
+					haha();
+				}
+			});
+		</script>
+	</body>
+</html>
